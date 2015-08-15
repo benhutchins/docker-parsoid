@@ -8,5 +8,5 @@ This Docker container expects the MediaWiki URL to be provided as an environment
 
 ## Interested in running MediaWiki inside Docker?
 
-Check out [benhutchins/docker-mediawiki](github.com/benhutchins/docker-mediawiki).
+Check out [benhutchins/docker-mediawiki](https://github.com/benhutchins/docker-mediawiki).
 
