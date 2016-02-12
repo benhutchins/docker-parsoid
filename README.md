@@ -4,9 +4,8 @@ MediaWiki uses its custom [Parsoid](https://www.mediawiki.org/wiki/Parsoid) serv
 
 This Docker container expects the MediaWiki URL to be provided as an environment variable `-e MW_URL=http://wiki` and exposes the Parsoid service on port 8000. Example:
 
-	docker run -p 8000:8000 -e MW_URL="http://wiki" benhutchins/parsoid
+	docker run -p 8142:8142 -e MW_URL="http://wiki" benhutchins/parsoid
 
 ## Interested in running MediaWiki inside Docker?
 
 Check out [benhutchins/docker-mediawiki](https://github.com/benhutchins/docker-mediawiki).
-

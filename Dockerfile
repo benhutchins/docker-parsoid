@@ -1,20 +1,25 @@
-FROM node:0.10
+FROM buildpack-deps:jessie
 
-# Install Git
+RUN gpg --keyserver keys.gnupg.net --recv-keys \
+    664C383A3566A3481B942F007A322AC6E84AFDD2
+
 RUN set -x; \
     apt-get update \
-    && apt-get install -y --no-install-recommends git \
+    && apt-get install -y --no-install-recommends \
+      apt-transport-https \
     && rm -rf /var/lib/apt/lists/*
 
-RUN git clone \
-  https://gerrit.wikimedia.org/r/p/mediawiki/services/parsoid \
-  /usr/src/parsoid \
-  && (cd /usr/src/parsoid && npm install)
+RUN echo "deb https://releases.wikimedia.org/debian jessie-mediawiki main" > /etc/apt/sources.list.d/parsoid.list
 
-WORKDIR /usr/src/parsoid/api
+RUN set -x; \
+    apt-get update \
+    && apt-get install -y --force-yes --no-install-recommends \
+      parsoid \
+    && rm -rf /var/lib/apt/lists/*
 
-# generate localsettings.js
-RUN sed "s|'http://localhost/w|process.env.MW_URL + '|" < localsettings.js.example > localsettings.js
+WORKDIR /etc/mediawiki/parsoid
 
-EXPOSE 8000
-CMD node /usr/src/parsoid/api/server.js
+RUN sed "s|'http://localhost/w|process.env.MW_URL + '|" < settings.js > settings.js
+
+EXPOSE 8142
+CMD ["/usr/bin/nodejs", "/usr/lib/parsoid/src/api/server.js"]
