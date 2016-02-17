@@ -19,7 +19,11 @@ RUN set -x; \
 
 WORKDIR /etc/mediawiki/parsoid
 
-RUN sed "s|'http://localhost/w|process.env.MW_URL + '|" < settings.js > settings.js
+RUN mkdir -p /data
 
-EXPOSE 8142
+VOLUME /data
+EXPOSE 8000 8142
+
+COPY docker-entrypoint.sh /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["/usr/bin/nodejs", "/usr/lib/parsoid/src/api/server.js"]
