@@ -1,29 +1,24 @@
-FROM buildpack-deps:jessie
+FROM node:6
 
-RUN gpg --keyserver keys.gnupg.net --recv-keys \
-    664C383A3566A3481B942F007A322AC6E84AFDD2
-
-RUN set -x; \
-    apt-get update \
-    && apt-get install -y --no-install-recommends \
-      apt-transport-https \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN echo "deb https://releases.wikimedia.org/debian jessie-mediawiki main" > /etc/apt/sources.list.d/parsoid.list
+ARG PARSOID_VERSION=v0.8.0
+ENV WORKDIR /usr/src/parsoid
+WORKDIR $WORKDIR
+EXPOSE 8000
 
 RUN set -x; \
-    apt-get update \
-    && apt-get install -y --force-yes --no-install-recommends \
-      parsoid \
-    && rm -rf /var/lib/apt/lists/*
+    git clone \
+      --depth 1 \
+      -b ${PARSOID_VERSION} \
+      https://github.com/wikimedia/parsoid \
+      $WORKDIR \
+    && rm -rf $WORKDIR/.git/
 
-WORKDIR /etc/mediawiki/parsoid
+RUN npm install && npm cache clean --force
 
 RUN mkdir -p /data
-
 VOLUME /data
-EXPOSE 8000 8142
 
 COPY docker-entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["/usr/bin/nodejs", "/usr/lib/parsoid/src/api/server.js"]
+CMD ["npm", "start"]
