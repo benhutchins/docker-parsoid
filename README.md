@@ -4,10 +4,12 @@ MediaWiki uses its custom [Parsoid](https://www.mediawiki.org/wiki/Parsoid) serv
 
 Example:
 
-	docker run \
-		-p 8000:8000 \
-		-v ./data:/data \
-		benhutchins/parsoid
+```
+docker run
+  -p 8000:8000
+  -v ./data:/data
+  benhutchins/parsoid
+```
 
 When you startup the container, it'll create a `config.yaml` file based on the
 example file from Parsoid.
