@@ -12,4 +12,11 @@ if [ ! -h config.yaml ]; then
 	ln -s "/data/config.yaml" config.yaml
 fi
 
+if [ ! -h localsettings.js ]; then
+	if [ -e /data/localsettings.js ]; then
+		echo >&2 "Creating symbolic link to 'localsettings.js'."
+		ln -s "/data/localsettings.js" localsettings.js
+	fi
+fi
+
 exec "$@"
